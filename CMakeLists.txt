@@ -8,9 +8,9 @@ set(LIBRARY_INSTALL_DIR "lib")
 set(CONFIG_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/${PROJECT_NAME}/cmake")
 
 find_package(catkin REQUIRED COMPONENTS roscpp)
-find_package(aikido REQUIRED COMPONENTS rviz)
+find_package(aikido REQUIRED COMPONENTS rviz io)
 find_package(Eigen3 REQUIRED)
-find_package(DART REQUIRED gui collision-bullet)
+find_package(DART REQUIRED gui collision-bullet optimizer-nlopt utils-urdf)
 
 #install(DIRECTORY "meshes"
 #    DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}"
@@ -24,7 +24,7 @@ target_include_directories(cozmo PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
- 
+
 target_include_directories(cozmo PRIVATE
   ${DART_INCLUDE_DIRS}
 )
@@ -43,7 +43,7 @@ add_executable(rviz_example
 
 add_executable(dart_example
   src/examples/dart_example.cpp
-)  
+)
 
 target_include_directories(rviz_example PRIVATE
   ${catkin_INCLUDE_DIRS}
