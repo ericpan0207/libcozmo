@@ -138,6 +138,26 @@ bool ObjectOrientedActionSpace::is_valid_action_id(const int& action_id) const {
     return action_id < actions.size() && action_id >= 0;
 }
 
+void ObjectOrientedActionSpace::publish_action(
+    ros::NodeHandle& cozmo_handle,
+    const int& action_id)
+{
+    if (!is_valid_action_id(action_id)) {
+        throw out_of_range("Action ID invalid");
+    }
+    action_publisher = cozmo_handle.advertise<libcozmo::OOAction>("oo_action", 1);
+    libcozmo::OOAction msg;
+    const auto action = get_action(action_id);
+    msg.speed = action->speed;
+    msg.duration = action->duration;
+    msg.x = action->start_pos.x();
+    msg.y = action->start_pos.x();
+    msg.theta = action->theta;
+
+    action_publisher.publish(msg);
+    ros::spinOnce();
+}
+
 void ObjectOrientedActionSpace::view_action_space() const {
     for (size_t i = 0; i < actions.size(); ++i) {
         if (i % 5 == 0) {
