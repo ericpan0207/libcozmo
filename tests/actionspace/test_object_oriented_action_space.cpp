@@ -142,6 +142,21 @@ TEST_F(SimpleOOActionFixture, PublishActionTest) {
 
     result = m_actionspace.publish_action(-1, m_action_publisher);
     ASSERT_FALSE(result);
+
+    as::ObjectOrientedActionSpace::Action temp_action = as::ObjectOrientedActionSpace::Action(1, 2, Eigen::Vector3d(3, 4, 5), 6);
+    result = m_actionspace.publish_action(&temp_action, m_action_publisher);
+    ASSERT_TRUE(result);
+    WaitForMessage();
+    action = get_action_msg();
+    EXPECT_EQ(3, action->x);
+    EXPECT_EQ(4, action->y);
+    EXPECT_EQ(5, action->theta);
+    EXPECT_EQ(1, action->speed);
+    EXPECT_EQ(2, action->duration);
+    msg_recieved = false;
+
+    result = m_actionspace.publish_action(nullptr, m_action_publisher);
+    ASSERT_FALSE(result);
 }
 
 TEST_F(SimpleOOActionFixture, OverwriteActionSpaceTest) {

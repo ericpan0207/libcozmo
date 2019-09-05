@@ -172,6 +172,24 @@ bool ObjectOrientedActionSpace::publish_action(
     return true;
 }
 
+bool ObjectOrientedActionSpace::publish_action(
+    Action* action,
+    const ros::Publisher& publisher) const
+{
+    libcozmo::ObjectOrientedAction msg;
+    if (action == nullptr) {
+        return false;
+    }
+    msg.speed = action->speed;
+    msg.duration = action->duration;
+    msg.x = action->start_pose(0);
+    msg.y = action->start_pose(1);
+    msg.theta = action->start_pose(2);
+
+    publisher.publish(msg);
+    return true;
+}
+
 int ObjectOrientedActionSpace::size() const {
     return actions.size();
 }

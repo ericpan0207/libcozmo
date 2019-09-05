@@ -165,6 +165,15 @@ class ObjectOrientedActionSpace : public virtual ActionSpace {
             const int& action_id,
             const ros::Publisher& publisher) const;
 
+        /// Publishes action msg for given action
+        ///
+        /// \param action Action
+        /// \param publisher ROS publisher
+        /// \return True if publish successful; false otherwise;
+        bool publish_action(
+            Action* action,
+            const ros::Publisher& publisher) const;
+
         /// Documentation inherited
         int size() const;
 
