@@ -369,18 +369,21 @@ class ObjectOrientedActionSpace(object):
 def cozmo_run(robot: cozmo.robot):
     #action = GenericActionSpace(robot, 10, 100, 5, 10, 100, 5, 1, 5, 5)
     #action.view_action_space()
-    look_around = robot.start_behavior(cozmo.behavior.BehaviorTypes.LookAroundInPlace)
-    cube = None
-    try:
-        cube = robot.world.wait_for_observed_light_cube(timeout=30)
-    except asyncio.TimeoutError:
-        print('no cube')
-    finally:
-        look_around.stop()
-    
-    oos = ObjectOrientedActionSpace(robot, cube, 3, 10, 100, 3, 1, 5, 3)
-    oos.view_action_space()
-    oos.apply_action(81)
+    robot.drive_wheels(100, 100, 500, 500, duration=1)
+    # look_around = robot.start_behavior(cozmo.behavior.BehaviorTypes.LookAroundInPlace)
+    # cube = None
+    # try:
+    #     cubes = robot.world.wait_until_observe_num_objects(3, cozmo.objects.LightCube, timeout=10)
+    #     # cube = robot.world.wait_for_observed_light_cube(timeout=30)
+    # except asyncio.TimeoutError:
+    #     print('no cube')
+    # finally:
+    #     look_around.stop()
+
+    # print(len(cubes))    
+    # oos = ObjectOrientedActionSpace(robot, cube, 3, 10, 100, 3, 1, 5, 3)
+    # oos.view_action_space()
+    # oos.apply_action(81)
     
 if __name__ == '__main__':
     cozmo.run_program(cozmo_run)
