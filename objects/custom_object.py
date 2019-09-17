@@ -7,6 +7,7 @@ import math
 import threading
 
 from visualization_msgs.msg import Marker
+from geometry_msgs.msg import Point
 
 class CustomObject():
     """
@@ -69,6 +70,7 @@ def cozmo_thread(pub, cozmo):
 def cozmo_run(robot: cozmo.robot):
     cozmo_publisher = rospy.Publisher('cozmo_marker', Marker, queue_size=10)
     object_publisher = rospy.Publisher('object_marker', Marker, queue_size=10)
+    arrow_publisher = rospy.Publisher('arrow_marker', Marker, queue_size=10)
 
     # Can't set attribute
     #reset_pose = pose_z_angle(0, 0, 0, radians(0))
@@ -76,12 +78,14 @@ def cozmo_run(robot: cozmo.robot):
 
     t = threading.Thread(target=cozmo_thread, args=(cozmo_publisher, robot))
     t.start()
-
+    arrow_id = 0
     while not rospy.is_shutdown():
         custom_obj = look_for_object(robot)
 
         publish_cozmo(cozmo_publisher, robot)
         publish_object(object_publisher, custom_obj)
+        publish_arrow(arrow_publisher, robot, arrow_id)
+        arrow_id += 1
         rospy.sleep(0.001)
         
         robot.go_to_pose(pose_z_angle(custom_obj.pose[0], custom_obj.pose[1], 0, radians(custom_obj.pose[2]))).wait_for_completed()
@@ -136,6 +140,32 @@ def publish_object(pub, custom_obj):
     box_marker.color.a = 1.0
     
     pub.publish(box_marker)
+
+def publish_arrow(pub, robot, arrow_id):
+    arrow_marker = Marker()
+    arrow_marker.header.frame_id = "base_link"
+    arrow_marker.type = Marker.ARROW
+    arrow_marker.id = arrow_id
+
+    arrow_marker.pose.position.x = robot.pose.position.x / 100.0
+    arrow_marker.pose.position.y = robot.pose.position.y / 100.0
+    arrow_marker.pose.position.z = 0.5
+
+    arrow_marker.pose.orientation.x = robot.pose.rotation.q1
+    arrow_marker.pose.orientation.y = robot.pose.rotation.q2
+    arrow_marker.pose.orientation.z = robot.pose.rotation.q3
+    arrow_marker.pose.orientation.w = robot.pose.rotation.q0
+
+    arrow_marker.scale.x = 0.5
+    arrow_marker.scale.y = 0.1
+    arrow_marker.scale.z = 0.1
+
+    arrow_marker.color.r = 0.0
+    arrow_marker.color.g = 0.5
+    arrow_marker.color.b = 0.5
+    arrow_marker.color.a = 1.0
+
+    pub.publish(arrow_marker)
 
 if __name__ == '__main__':
     rospy.init_node('custom_object')
