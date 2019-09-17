@@ -92,13 +92,16 @@ def publish_cozmo(pub, cozmo):
     cozmo_marker = Marker()
     cozmo_marker.header.frame_id = "base_link"
     cozmo_marker.type = Marker.CUBE
+
     cozmo_marker.pose.position.x = cozmo.pose.position.x / 100.0
     cozmo_marker.pose.position.y = cozmo.pose.position.y / 100.0
     cozmo_marker.pose.position.z = 1 / 100.0
+
     cozmo_marker.pose.orientation.x = cozmo.pose.rotation.q1
     cozmo_marker.pose.orientation.y = cozmo.pose.rotation.q2
     cozmo_marker.pose.orientation.z = cozmo.pose.rotation.q3
     cozmo_marker.pose.orientation.w = cozmo.pose.rotation.q0
+
     cozmo_marker.scale.x = 45 / 100.0
     cozmo_marker.scale.y = 45 / 100.0
     cozmo_marker.scale.z = 45 / 100.0
@@ -117,9 +120,8 @@ def publish_object(pub, custom_obj):
     box_marker.pose.position.x = custom_obj.pose[0] / 100.0
     box_marker.pose.position.y = custom_obj.pose[1] / 100.0
     box_marker.pose.position.z = 1 / 100.0
-    # Add 90 degrees since cozmo front is x-axis
+
     box_orientation = angle_z_to_quaternion(radians(custom_obj.pose[2]))
-    print(box_orientation)
     box_marker.pose.orientation.x = box_orientation[1]
     box_marker.pose.orientation.y = box_orientation[2]
     box_marker.pose.orientation.z = box_orientation[3]
